@@ -40,8 +40,8 @@ public class EditorHandler: WebSocketSessionHandler {
         return
       }//end guard
 
-      // avoid non-terminated string
-      let output = "\(input)\0".markdownToHTML ?? ""
+      // convert the input from markdown to HTML
+      let output = input.markdownToHTML ?? ""
 
       socket.sendStringMessage(string: output, final: true) {
         self.handleSession(request: request, socket: socket)

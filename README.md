@@ -105,9 +105,7 @@ public class EditorHandler: WebSocketSessionHandler {
       }//end guard
 
       // translate markdown to HTML, just one line code
-      // note that \0 means to force it adding a NULL teminator
-      // to avoid abnormal string conversion in memory
-      let output = "\(input)\0".markdownToHTML ?? ""
+      let output = input.markdownToHTML ?? ""
 
 		// send the HTML back to socket
       socket.sendStringMessage(string: output, final: true) {
@@ -122,17 +120,17 @@ public class EditorHandler: WebSocketSessionHandler {
 
 ``` javascript
 var input, output;
-function init(){ 
+function init(){
 	input = document.getElementById('textInput');
 	output = document.getElementById('results');
 	// create a socket and point it to the current server with api "/editor" and protocol "editor" (can be different names)
 	sock = new WebSocket('ws://' + window.location.host + '/editor', 'editor');
-	sock.onmessage = function(evt) { output.innerText = evt.data; } 
+	sock.onmessage = function(evt) { output.innerText = evt.data; }
 }//end init
-function send() { 
-	sock.send(input.value); 
-} 
-``` 
+function send() {
+	sock.send(input.value);
+}
+```
 
 ## Issues
 
