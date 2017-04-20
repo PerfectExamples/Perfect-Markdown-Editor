@@ -74,11 +74,9 @@ $ ./.build/debug/PerfectMarkdownEditor
 即SPM软件包管理器在编译项目时标准的源程序，核心代码如下：
 
 ``` swift
-``` swift
 	.Package(url: "https://github.com/PerfectlySoft/Perfect-HTTPServer.git", majorVersion: 2),
 	.Package(url: "https://github.com/PerfectlySoft/Perfect-WebSockets.git", majorVersion:2),
 	.Package(url: "https://github.com/PerfectlySoft/Perfect-Markdown.git", majorVersion: 1)
-```
 ```
 
 上述依存关系中， *Perfect-HTTPServer* 包括了启动一个Swift语言在 mac / linux 上开发HTTP服务器的所有必要功能；而 *Perfect-Markdown* 用于Swift语言将Markdown字符串转换为HTML文本。最后的 *Perfect-WebSocket* 用于服务器支持HTML5/WebSocket扩展。
