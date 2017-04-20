@@ -125,7 +125,8 @@ var input, output;
 function init(){ 
 	input = document.getElementById('textInput');
 	output = document.getElementById('results');
-	sock = new WebSocket('ws://' + window.location.host + '/puzzle', 'puzzle');
+	// create a socket and point it to the current server with api "/editor" and protocol "editor" (can be different names)
+	sock = new WebSocket('ws://' + window.location.host + '/editor', 'editor');
 	sock.onmessage = function(evt) { output.innerText = evt.data; } 
 }//end init
 function send() { 

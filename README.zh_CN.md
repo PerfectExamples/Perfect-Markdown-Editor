@@ -109,7 +109,7 @@ public class EditorHandler: WebSocketSessionHandler {
       // 注意\0表示强制在字符串末尾增加一个终止字符防止字符串转换不正常
       let output = "\(input)\0".markdownToHTML ?? ""
 
-		// send the HTML back to socket
+		// 将转化好的HTML文本返回给客户端
       socket.sendStringMessage(string: output, final: true) {
         self.handleSession(request: request, socket: socket)
       }//end send
@@ -125,7 +125,8 @@ var input, output;
 function init(){ 
 	input = document.getElementById('textInput');
 	output = document.getElementById('results');
-	sock = new WebSocket('ws://' + window.location.host + '/puzzle', 'puzzle');
+	//这一句话是创建WebSocket，并且将目标指向当前服务器，采用/editor路由和editor协议（碰巧重名）
+	sock = new WebSocket('ws://' + window.location.host + '/editor', 'editor');
 	sock.onmessage = function(evt) { output.innerText = evt.data; } 
 }//end init
 function send() { 
