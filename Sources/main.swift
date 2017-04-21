@@ -24,11 +24,18 @@ import PerfectWebSockets
 import PerfectMarkdown
 
 /// server port to start with
-let port = 7777
+let PORT = 7777
 
+/// web socket protocol
+let PROTOCOL = "editor"
+
+/// web socket api entry
+let API = "editor"
+
+/// WebSocket Event Handler
 public class EditorHandler: WebSocketSessionHandler {
 
-  public let socketProtocol : String? = "editor"
+  public let socketProtocol : String? = PROTOCOL
 
   // This function is called by the WebSocketHandler once the connection has been established.
   public func handleSession(request: HTTPRequest, socket: WebSocket) {
@@ -43,6 +50,7 @@ public class EditorHandler: WebSocketSessionHandler {
       // convert the input from markdown to HTML
       let output = input.markdownToHTML ?? ""
 
+      // sent it back to the request
       socket.sendStringMessage(string: output, final: true) {
         self.handleSession(request: request, socket: socket)
       }//end send
@@ -56,7 +64,7 @@ func socketHandler(data: [String:Any]) throws -> RequestHandler {
 
     WebSocketHandler(handlerProducer: { (request: HTTPRequest, protocols: [String]) -> WebSocketSessionHandler? in
 
-      guard protocols.contains("editor") else {
+      guard protocols.contains(PROTOCOL) else {
         return nil
       }//end guard
 
@@ -65,12 +73,12 @@ func socketHandler(data: [String:Any]) throws -> RequestHandler {
   }//end return
 }//end handler
 
-// default home page 
+// default home page
 let homePage = "<html><head><title>Perfect Online Markdown Editor</title>\n" +
   "<meta http-equiv='Content-Type' content='text/html;charset=utf-8'>\n" +
   "<script language=javascript type='text/javascript'>\nvar input, output;\n" +
   "function init()\n { input=document.getElementById('textInput'); \noutput=document.getElementById('results');\n" +
-  "sock=new WebSocket('ws://' + window.location.host + '/editor', 'editor');\n" +
+  "sock=new WebSocket('ws://' + window.location.host + '/\(API)', '\(PROTOCOL)');\n" +
   "sock.onmessage=function(evt) { output.innerHTML = evt.data; } }\n" +
   "function send() { sock.send(input.value); } \n" +
   "window.addEventListener('load', init, false);\n" +
@@ -80,39 +88,30 @@ let homePage = "<html><head><title>Perfect Online Markdown Editor</title>\n" +
 
 /// page handler: will print a input form with the solution list below
 func handler(data: [String:Any]) throws -> RequestHandler {
-  return {
-    request, response in
+  return { _, response in
     response.setHeader(.contentType, value: "text/html")
-    response.appendBody(string: homePage)
-    response.completed()
+    .appendBody(string: homePage).completed()
   }//end return
 }//end handler
 
 /// favicon
 func favicon(data: [String:Any]) throws -> RequestHandler {
-  return {
-    request, response in
+  return { _, response in
     response.completed()
   }//end return
 }//end handler
 
-let confData = [
-	"servers": [
-		[
-			"name":"localhost",
-			"port":port,
+let configuration = [ "servers": [[ "name":"localhost", "port":PORT,
 			"routes":[
 				["method":"get", "uri":"/", "handler":handler],
 				["method":"get", "uri":"/favicon.ico", "handler":favicon],
-        ["method":"get", "uri":"/editor", "handler":socketHandler]
-			]
-		]
-	]
-]
+        ["method":"get", "uri":"/\(API)", "handler":socketHandler]
+			]]]
+]//end configuration
 
 do {
 	// Launch the servers based on the configuration data.
-	try HTTPServer.launch(configurationData: confData)
+	try HTTPServer.launch(configurationData: configuration)
 } catch {
 	fatalError("\(error)") // fatal error launching one of the servers
 }
