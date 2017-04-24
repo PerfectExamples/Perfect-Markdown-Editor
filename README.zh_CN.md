@@ -91,8 +91,6 @@ $ ./.build/debug/PerfectMarkdownEditor
 
 - `/editor ` - WebSocket 处理器，即能够处理来自浏览器端的 WebSocket 请求：
 
-``` swift
-editor` - the WebSocket handler, i.e., incoming WebSocket requests will be processed as program below:
 
 ``` swift
 public class EditorHandler: WebSocketSessionHandler {
