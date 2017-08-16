@@ -1,0 +1,5 @@
+web:
+  image: rockywei/markdown
+  command: /opt/release/PerfectMarkdownEditor
+  ports:
+    - "7777:7777"

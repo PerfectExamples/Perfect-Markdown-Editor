@@ -90,7 +90,8 @@ let homePage = "<html><head><title>Perfect Online Markdown Editor</title>\n" +
 func handler(data: [String:Any]) throws -> RequestHandler {
   return { _, response in
     response.setHeader(.contentType, value: "text/html")
-    .appendBody(string: homePage).completed()
+    response.appendBody(string: homePage)
+    response.completed()
   }//end return
 }//end handler
 
